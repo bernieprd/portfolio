@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Star Sitter Program — Bernardo Prudêncio</title>
+  <meta name="description" content="A provider-level status program driving 4.8% more revenue per new customer — ~$2.5M incremental ARR."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0b;
+      --bg2: #111110;
+      --text: #f0ede6;
+      --muted: #4a4a46;
+      --mid: #888880;
+      --dim: #333330;
+      --rule: rgba(240,237,230,0.12);
+      --accent: #f0ede6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* cursor */
+    #cur {
+      position: fixed;
+      width: 9px; height: 9px;
+      background: var(--text);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .18s, height .18s;
+      mix-blend-mode: difference;
+    }
+    #cur.big { width: 44px; height: 44px; opacity: .12; }
+
+    /* header */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 32px 48px;
+      pointer-events: none;
+    }
+    .h-name {
+      pointer-events: all;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .h-name span {
+      display: block;
+      color: var(--mid);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    nav {
+      pointer-events: all;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    nav a {
+      color: var(--mid);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color .2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* big heading */
+    .big-heading {
+      font-size: clamp(60px, 9.5vw, 136px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+      color: var(--text);
+    }
+    .heading-row {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .heading-row .rule {
+      flex: 1;
+      max-width: 380px;
+      height: 1px;
+      background: rgba(240,237,230,0.2);
+      transform-origin: left;
+      animation: ruleIn 1s ease 0.4s both;
+    }
+    @keyframes ruleIn {
+      from { transform: scaleX(0); opacity: 0; }
+      to   { transform: scaleX(1); opacity: 1; }
+    }
+
+    /* divider */
+    .divider {
+      height: 1px;
+      background: var(--rule);
+      margin: 0 48px;
+    }
+
+    /* section wrapper */
+    .section {
+      padding: 100px 48px;
+    }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 48px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── CASE HERO ── */
+    #cs-hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 140px 48px 72px;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .cs-hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a2a3a 0%, #0d1625 60%, #0c0c0b 100%);
+      opacity: 0.6;
+    }
+    .cs-hero-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .cs-back {
+      position: relative; z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color .2s;
+      margin-bottom: 72px;
+      opacity: 0;
+      animation: fadeUp .6s ease .1s forwards;
+    }
+    .cs-back:hover { color: var(--text); }
+    .cs-back-arrow { font-size: 14px; }
+
+    .cs-hero-meta {
+      position: relative; z-index: 2;
+      opacity: 0;
+      animation: fadeUp .7s ease .2s forwards;
+    }
+
+    .cs-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .cs-eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 6px rgba(76,175,80,.6);
+    }
+
+    .cs-title {
+      opacity: 0;
+      animation: fadeUp .8s ease .35s forwards;
+    }
+
+    .cs-tagline {
+      position: relative; z-index: 2;
+      margin-top: 40px;
+      max-width: 580px;
+      color: var(--mid);
+      font-size: 16px;
+      line-height: 1.75;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp .8s ease .55s forwards;
+    }
+    .cs-tagline strong { color: var(--text); font-weight: 500; }
+
+    .cs-hero-stats {
+      position: relative; z-index: 2;
+      display: flex;
+      gap: 0;
+      margin-top: 72px;
+      border-top: 1px solid var(--rule);
+      opacity: 0;
+      animation: fadeUp .8s ease .7s forwards;
+    }
+    .cs-stat {
+      flex: 1;
+      padding: 28px 0 0;
+      border-right: 1px solid var(--rule);
+      padding-right: 32px;
+      margin-right: 32px;
+    }
+    .cs-stat:last-child { border-right: none; margin-right: 0; padding-right: 0; }
+    .cs-stat-value {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .cs-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* ── OVERVIEW STRIP ── */
+    .cs-overview {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      border-bottom: 1px solid var(--rule);
+    }
+    .cs-overview-item {
+      padding: 40px 48px;
+      border-right: 1px solid var(--rule);
+    }
+    .cs-overview-item:last-child { border-right: none; }
+    .cs-overview-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .cs-overview-value {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    /* ── BODY SECTIONS ── */
+    .cs-body-section {
+      padding: 100px 48px;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .cs-section-header {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-bottom: 56px;
+    }
+
+    .cs-section-num {
+      font-family: 'Syne Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 6px;
+      letter-spacing: 0.1em;
+    }
+
+    .cs-section-title {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      text-transform: lowercase;
+      color: var(--text);
+    }
+
+    .cs-content {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+    }
+    .cs-content-body {
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.9;
+    }
+    .cs-content-body p { margin-bottom: 20px; }
+    .cs-content-body p:last-child { margin-bottom: 0; }
+    .cs-content-body strong { color: var(--text); font-weight: 600; }
+
+    /* ── PHASE TIMELINE ── */
+    .cs-phases {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+    }
+    .cs-phase-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .cs-phase {
+      border-top: 1px solid var(--rule);
+      padding: 32px 0;
+      position: relative;
+    }
+    .cs-phase:last-child { border-bottom: 1px solid var(--rule); }
+    .cs-phase-label {
+      font-family: 'Syne Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .cs-phase-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+    .cs-phase-body {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.8;
+    }
+    .cs-phase-body strong { color: var(--text); font-weight: 600; }
+
+    /* ── CALLOUT ── */
+    .cs-callout {
+      margin: 48px 0;
+      padding: 28px 32px;
+      background: rgba(240,237,230,0.04);
+      border-left: 2px solid rgba(240,237,230,0.2);
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .cs-callout strong { color: var(--text); }
+
+    /* ── OUTCOME METRICS ── */
+    .cs-outcomes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      margin-top: 48px;
+    }
+    .cs-outcome-item {
+      background: var(--bg);
+      padding: 36px 40px;
+    }
+    .cs-outcome-value {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .cs-outcome-label {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── LEARNINGS ── */
+    .cs-learnings {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .cs-learning {
+      padding: 32px 0;
+      border-top: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 48px;
+    }
+    .cs-learning:last-child { border-bottom: 1px solid var(--rule); }
+    .cs-learning-num {
+      font-family: 'Syne Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+    .cs-learning-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .cs-learning-body {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.8;
+    }
+
+    /* ── NEXT PROJECT ── */
+    .cs-next {
+      padding: 100px 48px;
+      display: block;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      cursor: none;
+    }
+    .cs-next-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #2a1a2a, #180d18);
+      opacity: 0;
+      transition: opacity .55s ease;
+      filter: brightness(0.35) saturate(0.7);
+    }
+    .cs-next:hover .cs-next-bg { opacity: 1; }
+    .cs-next-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+      position: relative; z-index: 2;
+    }
+    .cs-next-title {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+      color: var(--text);
+      line-height: 0.95;
+      position: relative; z-index: 2;
+    }
+    .cs-next-arrow {
+      position: absolute;
+      top: 100px; right: 48px;
+      font-size: 32px;
+      color: var(--muted);
+      transition: transform .3s, color .3s;
+      z-index: 2;
+    }
+    .cs-next:hover .cs-next-arrow { transform: translate(8px, -8px); color: var(--text); }
+
+    /* footer */
+    footer {
+      padding: 28px 48px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: 11px; color: var(--muted); }
+
+    /* image placeholder */
+    .cs-img-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #1a2a3a 0%, #0d1625 100%);
+      border-radius: 4px;
+      border: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 40px 0;
+      position: relative;
+    }
+    .cs-img-placeholder .mock-ui {
+      width: 80%;
+      height: 70%;
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 10px;
+    }
+    .mock-row { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; }
+    .mock-row.accent { background: rgba(76,175,80,0.3); width: 40%; }
+    .mock-row.short { width: 60%; }
+    .mock-row.med { width: 80%; }
+
+    .cs-img-caption {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      font-family: 'Syne Mono', monospace;
+      margin-top: -28px;
+      margin-bottom: 40px;
+    }
+
+    /* two col layout */
+    .cs-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 24px; }
+      .section, .cs-body-section, .cs-next { padding-left: 24px; padding-right: 24px; }
+      #cs-hero { padding-left: 24px; padding-right: 24px; }
+      .divider { margin: 0 24px; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .cs-overview { grid-template-columns: 1fr 1fr; }
+      .cs-overview-item { padding: 28px 24px; }
+      .cs-section-header, .cs-content, .cs-phases, .cs-learning { grid-template-columns: 1fr; gap: 20px; }
+      .cs-section-num { display: none; }
+      .cs-outcomes { grid-template-columns: 1fr; }
+      .cs-hero-stats { flex-direction: column; gap: 28px; }
+      .cs-stat { border-right: none; border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-right: 0; }
+      .cs-two-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="h-name">
+    Bernardo Prudêncio
+    <span>/ senior product designer</span>
+  </a>
+  <nav>
+    <a href="index.html#about">about me</a>
+    <a href="index.html#work-heading">selected work</a>
+    <a href="index.html#experience">experience</a>
+    <a href="index.html#contact">contact</a>
+  </nav>
+</header>
+
+<!-- CASE HERO -->
+<section id="cs-hero">
+  <div class="cs-hero-bg"></div>
+  <div class="cs-hero-noise"></div>
+
+  <a href="index.html#work-heading" class="cs-back">
+    <span class="cs-back-arrow">←</span>
+    <span>selected work</span>
+  </a>
+
+  <div class="cs-hero-meta">
+    <div class="cs-eyebrow">
+      <div class="cs-eyebrow-dot"></div>
+      Rover · sitter experience · 2023 to 2025
+    </div>
+  </div>
+
+  <div class="cs-title">
+    <div class="big-heading">
+      <div class="heading-row">
+        <span>star</span>
+        <div class="rule"></div>
+      </div>
+      <div>sitter program</div>
+    </div>
+  </div>
+
+  <p class="cs-tagline">
+    A provider-level status program rewarding <strong>reliability and on-platform care</strong> — driving higher conversion, stronger sitter behaviour, and meaningful incremental revenue.
+  </p>
+
+  <div class="cs-hero-stats">
+    <div class="cs-stat">
+      <div class="cs-stat-value">4.8%</div>
+      <div class="cs-stat-label">increase in revenue per<br>new-to-Rover customer</div>
+    </div>
+    <div class="cs-stat">
+      <div class="cs-stat-value">~$2.5M</div>
+      <div class="cs-stat-label">incremental annual<br>revenue extrapolated</div>
+    </div>
+    <div class="cs-stat">
+      <div class="cs-stat-value">+1pp</div>
+      <div class="cs-stat-label">higher conversion for<br>Star Sitter searches</div>
+    </div>
+    <div class="cs-stat">
+      <div class="cs-stat-value">2 yrs</div>
+      <div class="cs-stat-label">from Sitter Insights<br>to rolling global rollout</div>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW STRIP -->
+<div class="cs-overview">
+  <div class="cs-overview-item">
+    <div class="cs-overview-label">My role</div>
+    <div class="cs-overview-value">Lead product designer</div>
+  </div>
+  <div class="cs-overview-item">
+    <div class="cs-overview-label">Timeline</div>
+    <div class="cs-overview-value">Early 2023 — April 2025</div>
+  </div>
+  <div class="cs-overview-item">
+    <div class="cs-overview-label">Scope</div>
+    <div class="cs-overview-value">End-to-end — strategy to global rollout</div>
+  </div>
+  <div class="cs-overview-item">
+    <div class="cs-overview-label">Partners</div>
+    <div class="cs-overview-value">PM, Data Science, UXR, CX/Ops, T&S</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SUMMARY -->
+<div class="cs-body-section">
+  <div class="cs-section-header">
+    <div class="cs-section-num">00 — Summary</div>
+    <h2 class="cs-section-title">why star sitter?</h2>
+  </div>
+  <div class="cs-content">
+    <div></div>
+    <div class="cs-content-body">
+      <p>Rover is a two-sided marketplace for pet care, connecting pet parents with independent sitters. We built Star Sitter because <strong>sitter success and on-platform behaviour are critical to both owner experience and Rover revenue</strong>.</p>
+      <p>We had already introduced best practices — responsiveness, reliability, quality care, on-platform booking — and given sitters visibility via booking walkthroughs and the Sitter Insights dashboard. But we lacked a strong motivation and recognition mechanism that would actually change day-to-day behaviour.</p>
+      <p>At the same time, off-platform bookings (diversion) were a large strategic opportunity. Star Sitter is a provider-level status program that rewards sitters with a track record of highly rated, reliable, on-platform care, and routes more demand to them in search and profiles.</p>
+
+      <div class="cs-callout">
+        In experiments, it <strong>increased new-to-Rover revenue per customer by 4.8%</strong> and extrapolated to roughly <strong>$2.5M in incremental annual revenue</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PROBLEM -->
+<div class="cs-body-section">
+  <div class="cs-section-header">
+    <div class="cs-section-num">01 — Problem</div>
+    <h2 class="cs-section-title">three gaps, one lever</h2>
+  </div>
+  <div class="cs-content">
+    <div></div>
+    <div class="cs-content-body">
+      <p>Despite existing education and visibility work, we were seeing three persistent gaps in the marketplace.</p>
+      <p><strong>Owners struggled to identify reliable sitters in search.</strong> There was no clear signal distinguishing high-trust supply from the rest.</p>
+      <p><strong>Sitters saw metrics but felt no strong, ongoing motivation to change behaviour.</strong> Sitter Insights told them how they were doing — it didn't tell them what it was worth.</p>
+      <p><strong>Diversion remained a large, strategic revenue leak</strong> despite education and policy work. Sitters could understand what Rover expected and still leave with their repeat clients.</p>
+      <p>Internally, we framed this as needing a third lever — a status program that could: gamify the behaviours we cared about; direct demand to our most reliable supply; and start reducing off-platform bookings by tying status to on-platform repeat behaviour and diversion-related disqualifiers.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PHASES -->
+<div class="cs-body-section">
+  <div class="cs-section-header">
+    <div class="cs-section-num">02 — Approach</div>
+    <h2 class="cs-section-title">five phases over two years</h2>
+  </div>
+  <div class="cs-phases">
+    <div></div>
+    <div class="cs-phase-list">
+
+      <div class="cs-phase">
+        <div class="cs-phase-label">Phase 01 · 2023</div>
+        <div class="cs-phase-title">Laying the foundation — Sitter Insights</div>
+        <div class="cs-phase-body">
+          We launched the Sitter Insights dashboard with metrics like response rate, booking rate, calendar updates, and cancellations. The experiment showed small but positive improvements in conversation booking rate, and more importantly, <strong>established a mental model</strong>: "this is where I understand how my business is doing." I joined as the project moved into development, refining details so the shipped experience could serve as the foundation for Star Sitter.
+        </div>
+      </div>
+
+      <div class="cs-phase">
+        <div class="cs-phase-label">Phase 02</div>
+        <div class="cs-phase-title">Star Sitter Beta — proving the badge</div>
+        <div class="cs-phase-body">
+          With the data foundation in place, we introduced Star Sitter in a limited set of markets. Provider-level, non-tiered status. Qualification based on bookings, response rate, star rating, new client booking rate, and repeat clients. <strong>Badge surfacing on search cards and profiles</strong>, plus a "Only show Star Sitters" filter. A static landing page explaining criteria and perks. The owner-side split test showed the badge meaningfully shifted behaviour and revenue — more conversations going to Star Sitters, higher conversion, higher average booking values.
+        </div>
+
+        <div class="cs-img-placeholder">
+          <div class="mock-ui">
+            <div class="mock-row accent"></div>
+            <div class="mock-row med"></div>
+            <div class="mock-row short"></div>
+            <div style="height:1px;background:rgba(255,255,255,0.06);margin:4px 0;"></div>
+            <div class="mock-row"></div>
+            <div class="mock-row accent"></div>
+            <div class="mock-row short"></div>
+          </div>
+        </div>
+        <div class="cs-img-caption">Star Sitter badge on search cards and profile pages</div>
+      </div>
+
+      <div class="cs-phase">
+        <div class="cs-phase-label">Phase 03</div>
+        <div class="cs-phase-title">Making it understandable — landing page and tracking</div>
+        <div class="cs-phase-body">
+          Early CX and social sentiment surfaced cracks: sitters struggling to understand booking rate, confusion about why "great" sitters lacked the badge, pain around edge cases. We iterated on two surfaces. On the landing page, quick usability tests showed sitters skimmed past key rules. We tightened copy to use direct, instructive phrasing and added a prominent "Check your progress" CTA. On the tracking side, we redesigned the Sitter Insights tab with <strong>a clearer status message, tiered "Learn more" patterns, and a real distinction between past snapshots and current-period metrics</strong>.
+        </div>
+      </div>
+
+      <div class="cs-phase">
+        <div class="cs-phase-label">Phase 04</div>
+        <div class="cs-phase-title">Making it fair — criteria, legacying, metric transparency</div>
+        <div class="cs-phase-body">
+          As the program scaled, fairness and explainability became as important as raw impact. We made three major changes. First, from lifetime to recent activity — 5 recent clients and 2 repeat clients in the last 6 months, so status reflects <em>currently</em> active, high-quality supply. Second, productized legacying: sitters who miss one metric can keep the badge for one grace period while remaining active. Third, we fixed the <strong>Contact More Sitters bias</strong> — excluding low-intent backup requests from the new client booking rate denominator, which moved a cohort of long-tenured sitters over the 33% threshold without lowering the bar for weaker supply.
+        </div>
+      </div>
+
+      <div class="cs-phase">
+        <div class="cs-phase-label">Phase 05 · Apr 2025</div>
+        <div class="cs-phase-title">Scale and automate — rolling status</div>
+        <div class="cs-phase-body">
+          Quarterly refreshes gave us stability at launch, but created predictable CX spikes, a fragile batch process, and status that drifted out of sync with seasonality. We moved to a rolling model: <strong>sitters earn Star Sitter as soon as they meet the criteria</strong>; dropping below puts them into a three-month grace period; Trust &amp; Safety and diversion remain immediate disqualifiers. Notifications shift from quarterly blasts to contextual messaging. On the design side, this meant dramatically simplifying Sitter Insights — no more qualification period dropdowns, a single real-time picture of where sitters stand.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- OUTCOMES -->
+<div class="cs-body-section">
+  <div class="cs-section-header">
+    <div class="cs-section-num">03 — Impact</div>
+    <h2 class="cs-section-title">outcomes</h2>
+  </div>
+  <div class="cs-content">
+    <div></div>
+    <div>
+      <div class="cs-content-body">
+        <p>Across experiments and rollouts, Star Sitter drove measurable impact on both owners and the business.</p>
+      </div>
+      <div class="cs-outcomes">
+        <div class="cs-outcome-item">
+          <div class="cs-outcome-value">4.8%</div>
+          <div class="cs-outcome-label">increase in revenue per new-to-Rover customer, driven by higher average booking values and nearly 1pp higher conversion</div>
+        </div>
+        <div class="cs-outcome-item">
+          <div class="cs-outcome-value">~$2.5M</div>
+          <div class="cs-outcome-label">incremental Rover revenue at full scale, extrapolated from geo-split test assuming global uplift</div>
+        </div>
+        <div class="cs-outcome-item">
+          <div class="cs-outcome-value">↑ share</div>
+          <div class="cs-outcome-label">search behaviour shifted toward sitters with stronger reliability and on-platform habits</div>
+        </div>
+        <div class="cs-outcome-item">
+          <div class="cs-outcome-value">↓ CX</div>
+          <div class="cs-outcome-label">booking-rate-related Trust &amp; Safety and CX contacts dropped as criteria and grace periods were refined</div>
+        </div>
+      </div>
+      <div class="cs-callout" style="margin-top:40px;">
+        Just as importantly, we now have a status program that is <strong>flexible enough to support future tiers</strong>, and technically sustainable to run globally without manual quarterly interventions.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LEARNINGS -->
+<div class="cs-body-section">
+  <div class="cs-section-header">
+    <div class="cs-section-num">04 — Learnings</div>
+    <h2 class="cs-section-title">what I took away</h2>
+  </div>
+  <div class="cs-content">
+    <div></div>
+    <div>
+      <div class="cs-learnings">
+        <div class="cs-learning">
+          <div class="cs-learning-num">01</div>
+          <div>
+            <div class="cs-learning-title">A badge alone is not a program</div>
+            <div class="cs-learning-body">Star Sitter began as a single badge, but the design challenge was really to create a living, explainable system that balances sitter motivation, owner trust, operational reality, and marketplace health. That lens drove every iteration.</div>
+          </div>
+        </div>
+        <div class="cs-learning">
+          <div class="cs-learning-num">02</div>
+          <div>
+            <div class="cs-learning-title">Explainability is a product feature</div>
+            <div class="cs-learning-body">The criteria themselves were sound — but sitters couldn't act on them if they couldn't understand them. Usability testing on the landing page and tracking tab unlocked more behaviour change than further metric tuning would have.</div>
+          </div>
+        </div>
+        <div class="cs-learning">
+          <div class="cs-learning-num">03</div>
+          <div>
+            <div class="cs-learning-title">Fairness at scale requires constant maintenance</div>
+            <div class="cs-learning-body">Edge cases like Contact More Sitters showed up only once the program was in production. Designing status programs means committing to ongoing fairness work — not just a launch spec.</div>
+          </div>
+        </div>
+        <div class="cs-learning">
+          <div class="cs-learning-num">04</div>
+          <div>
+            <div class="cs-learning-title">Batch logic creates predictable fragility</div>
+            <div class="cs-learning-body">Quarterly refreshes felt safe but created engineering overhead, CX spikes, and sitter frustration. The move to rolling status reduced all three — and made the program feel more like a real business tool and less like a seasonal event.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- NEXT PROJECT -->
+<a class="cs-next" href="service-areas.html">
+  <div class="cs-next-bg"></div>
+  <div class="cs-next-label">Next project</div>
+  <div class="cs-next-title">
+    service areas<br>using travel distance
+  </div>
+  <div class="cs-next-arrow">↗</div>
+</a>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 Bernardo Prudêncio. All rights reserved.</span>
+  <a href="index.html" style="font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;">← back to portfolio</a>
+</footer>
+
+<script>
+  // cursor
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  // scroll reveals
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll(
+    '.cs-overview-item, .cs-section-header, .cs-content-body, .cs-phase, .cs-outcome-item, .cs-learning, .cs-callout'
+  ).forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(14px)';
+    el.style.transition = 'opacity .65s ease, transform .65s ease';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
