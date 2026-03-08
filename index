@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bernardo Prudêncio — Senior Product Designer</title>
+  <meta name="description" content="Product designer specialising in supply-side tools for marketplaces, incentives, and service experiences."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0b;
+      --bg2: #111110;
+      --text: #f0ede6;
+      --muted: #4a4a46;
+      --mid: #888880;
+      --dim: #333330;
+      --rule: rgba(240,237,230,0.12);
+      --accent: #f0ede6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* cursor */
+    #cur {
+      position: fixed;
+      width: 9px; height: 9px;
+      background: var(--text);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width .18s, height .18s;
+      mix-blend-mode: difference;
+    }
+    #cur.big { width: 44px; height: 44px; opacity: .12; }
+
+    /* header */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 32px 48px;
+      pointer-events: none;
+    }
+    .h-name {
+      pointer-events: all;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .h-name span {
+      display: block;
+      color: var(--mid);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    nav {
+      pointer-events: all;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    nav a {
+      color: var(--mid);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      transition: color .2s;
+    }
+    nav a:hover, nav a.active { color: var(--text); }
+    .nav-arrow { color: var(--muted); font-size: 15px; }
+
+    /* big heading */
+    .big-heading {
+      font-size: clamp(60px, 9.5vw, 136px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+      color: var(--text);
+    }
+    .heading-row {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .heading-row .rule {
+      flex: 1;
+      max-width: 380px;
+      height: 1px;
+      background: rgba(240,237,230,0.2);
+      transform-origin: left;
+      animation: ruleIn 1s ease 0.4s both;
+    }
+    @keyframes ruleIn {
+      from { transform: scaleX(0); opacity: 0; }
+      to   { transform: scaleX(1); opacity: 1; }
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 140px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-img {
+      position: absolute;
+      top: 50%; right: 8%;
+      transform: translateY(-50%);
+      width: 340px; height: 440px;
+      background: linear-gradient(140deg, #1c2535 0%, #0e1320 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      opacity: 0.45;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone-mockup {
+      width: 160px; height: 300px;
+      background: linear-gradient(160deg, #263553, #19264a);
+      border-radius: 22px;
+      border: 1.5px solid rgba(255,255,255,0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 18px 13px;
+    }
+    .pm-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; }
+    .pm-bar.blue { background: rgba(66,133,244,0.6); width: 68%; }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp .7s ease .1s forwards;
+    }
+    .hero-title { opacity: 0; animation: fadeUp .8s ease .3s forwards; }
+    .hero-sub {
+      margin-top: 40px;
+      max-width: 520px;
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp .8s ease .55s forwards;
+    }
+    .hero-sub strong { color: var(--text); font-weight: 500; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* divider */
+    .divider {
+      height: 1px;
+      background: var(--rule);
+      margin: 0 48px;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      padding: 120px 48px;
+    }
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 64px;
+    }
+
+    /* ── ABOUT ── */
+    .about-body p {
+      color: var(--mid);
+      font-size: 15px;
+      line-height: 1.9;
+      margin-bottom: 18px;
+      max-width: 640px;
+    }
+    .about-body p strong { color: var(--text); font-weight: 500; }
+    .about-body p em { color: var(--mid); font-style: italic; }
+
+    /* ── WORK ── */
+    #work { padding-top: 0; }
+
+    .work-heading {
+      padding: 120px 48px 0;
+    }
+
+    .project-list { display: flex; flex-direction: column; margin-top: 80px; }
+
+    .project-item {
+      position: relative;
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 72px 48px 52px;
+      overflow: hidden;
+      border-top: 1px solid var(--rule);
+      text-decoration: none;
+      cursor: none;
+    }
+    .project-item.locked { opacity: 0.38; pointer-events: none; }
+
+    .project-bg {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity .55s ease;
+      filter: brightness(0.3) saturate(0.6);
+      background-size: cover;
+      background-position: center;
+    }
+    .project-item:hover .project-bg { opacity: 1; }
+
+    /* gradient placeholders — replace with real cover images */
+    .pb-1 { background: linear-gradient(135deg,#1d3a2a,#0e1f16); }
+    .pb-2 { background: linear-gradient(135deg,#1a2a3a,#0d1625); }
+    .pb-3 { background: linear-gradient(135deg,#2a1a2a,#180d18); }
+    .pb-4 { background: linear-gradient(135deg,#2a2a1a,#181808); }
+
+    .project-meta { position: relative; z-index: 2; }
+
+    .project-status {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sdot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4CAF50;
+      box-shadow: 0 0 6px rgba(76,175,80,.6);
+    }
+    .sdot.wip { background: #FFC107; box-shadow: 0 0 6px rgba(255,193,7,.6); }
+
+    .project-title {
+      font-size: clamp(36px, 5.5vw, 72px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      text-transform: lowercase;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .project-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .project-desc {
+      font-size: 13px;
+      color: var(--mid);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+    .project-source {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Syne Mono', monospace;
+      white-space: nowrap;
+      text-align: right;
+    }
+    .project-arrow {
+      font-size: 26px;
+      color: var(--muted);
+      transition: transform .3s, color .3s;
+      position: relative; z-index: 2;
+      text-align: right;
+      margin-bottom: 24px;
+      display: block;
+    }
+    .project-item:hover .project-arrow { transform: translate(8px,-8px); color: var(--text); }
+
+    /* ── EXPERIENCE ── */
+    .exp-block {
+      margin-bottom: 56px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .exp-block:last-child { border-bottom: none; margin-bottom: 0; }
+
+    .exp-company {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .exp-focus {
+      font-size: 13px;
+      color: var(--mid);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .exp-role {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+      border-top: 1px solid var(--rule);
+    }
+    .exp-role-title {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .exp-role-title span { color: var(--mid); font-weight: 400; }
+    .exp-role-date {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Syne Mono', monospace;
+      white-space: nowrap;
+    }
+
+    /* ── EDUCATION ── */
+    .edu-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .edu-item:first-child { border-top: 1px solid var(--rule); }
+    .edu-degree {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .edu-school {
+      font-size: 12px;
+      color: var(--mid);
+    }
+    .edu-date {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'Syne Mono', monospace;
+      margin-top: 2px;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 48px;
+    }
+
+    .contact-links { margin-top: 56px; }
+    .contact-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+      color: var(--mid);
+      font-size: 14px;
+      transition: color .2s, padding-left .3s;
+    }
+    .contact-link:first-child { border-top: 1px solid var(--rule); }
+    .contact-link:hover { color: var(--text); padding-left: 8px; }
+    .contact-link-type {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* footer */
+    footer {
+      padding: 28px 48px;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: 11px; color: var(--muted); }
+
+    .exp-bullets {
+      margin-top: 16px;
+      padding-left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      list-style: none;
+    }
+    .exp-bullets li {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.75;
+      padding-left: 16px;
+      position: relative;
+    }
+    .exp-bullets li::before {
+      content: '·';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+    .exp-bullets li strong { color: var(--text); font-weight: 600; }
+
+    .edu-desc {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    /* ── ACCORDION ── */
+    .acc-item { border-top: 1px solid var(--rule); }
+    .acc-item:last-child { border-bottom: 1px solid var(--rule); }
+
+    .acc-trigger {
+      width: 100%;
+      background: none;
+      border: none;
+      color: inherit;
+      font-family: inherit;
+      cursor: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 32px;
+      padding: 28px 0;
+      text-align: left;
+      transition: opacity .2s;
+    }
+    .acc-trigger:hover { opacity: 0.75; }
+    .acc-trigger-left { flex: 1; min-width: 0; }
+
+    .acc-icon {
+      width: 18px; height: 18px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .acc-icon span {
+      position: absolute;
+      background: var(--mid);
+      border-radius: 1px;
+      transition: transform .35s ease, opacity .25s ease;
+    }
+    .acc-icon span:first-child {
+      width: 100%; height: 1px;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+    }
+    .acc-icon span:last-child {
+      width: 1px; height: 100%;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+    }
+    .acc-trigger[aria-expanded="true"] .acc-icon span:last-child {
+      transform: translateX(-50%) rotate(90deg);
+      opacity: 0;
+    }
+
+    .acc-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .4s ease;
+      overflow: hidden;
+    }
+    .acc-body.open { grid-template-rows: 1fr; }
+    .acc-body-inner { padding-bottom: 28px; overflow: hidden; }
+
+    .exp-role-inline {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 24px; }
+      #hero, .section, #contact { padding-left: 24px; padding-right: 24px; }
+      .work-heading { padding-left: 24px; padding-right: 24px; }
+      .project-item { padding: 72px 24px 48px; min-height: 70vh; }
+      .divider { margin: 0 24px; }
+      footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+      .hero-img { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="cur"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="#hero" class="h-name">
+    Bernardo Prudêncio
+    <span>/ senior product designer</span>
+  </a>
+  <nav>
+    <a href="#about">about me</a>
+    <span class="nav-arrow">↙</span>
+    <a href="#work-heading">selected work</a>
+    <a href="#experience">experience</a>
+    <a href="#contact">contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-img" aria-hidden="true">
+    <div class="phone-mockup">
+      <div class="pm-bar blue"></div>
+      <div class="pm-bar"></div>
+      <div class="pm-bar" style="width:82%"></div>
+      <div class="pm-bar blue" style="width:52%"></div>
+      <div class="pm-bar" style="width:38%"></div>
+      <div class="pm-bar" style="width:88%"></div>
+      <div class="pm-bar" style="width:58%"></div>
+    </div>
+  </div>
+  <p class="hero-eyebrow">Barcelona · Open to new opportunities</p>
+  <div class="hero-title big-heading">
+    <div class="heading-row">
+      <span>digital</span>
+      <div class="rule"></div>
+    </div>
+    <div>experience designer</div>
+  </div>
+  <p class="hero-sub">
+    Product designer specialising in <strong>supply-side tools</strong> for marketplaces, incentives, and service experiences.
+  </p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <p class="section-label">About me</p>
+  <div class="about-body">
+    <p>I've been a Product Designer for <strong>9+ years</strong>. Currently, I'm at <strong>Rover</strong>, where I work on the sitter side of the marketplace — from search and retention to alternative monetization models. My favourite problems live on the supply side: building tools that sitters, couriers, and operators use every day to run their business.</p>
+    <p>Before that, I spent time at <strong>Glovo</strong>, <strong>Stuart</strong>, and <strong>GuestCentric</strong>, working on logistics, last-mile delivery, and hotel management systems.</p>
+    <p>I'm a big believer in end-to-end ownership: understanding users and the business, exploring problems and solutions with a cross-functional team, navigating technical constraints together, and measuring the impact of what we actually deliver.</p>
+    <p><em>Off-duty, I'm likely running by the beach 🏖</em></p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SELECTED WORK HEADING -->
+<div class="work-heading" id="work-heading">
+  <div class="big-heading">
+    <div class="heading-row">
+      <span>sel</span>
+      <div class="rule"></div>
+    </div>
+    <div>ected work</div>
+  </div>
+</div>
+
+<!-- PROJECT LIST -->
+<div class="project-list" id="work">
+
+  <a class="project-item" href="https://www.notion.so/31c332846c008006bb19ddf120f745e6" target="_blank">
+    <div class="project-bg pb-1"></div>
+    <div class="project-arrow">↗</div>
+    <div class="project-meta">
+      <div class="project-status"><div class="sdot wip"></div>in-flight · 2025 to today</div>
+      <div class="project-title">relationship-based graduated fees</div>
+      <div class="project-footer">
+        <div class="project-desc">Rethinking how Rover charges sitters — aligning platform fees with relationship value to reduce diversion and grow per-relationship revenue.</div>
+        <div class="project-source">Rover · alternative monetisation</div>
+      </div>
+    </div>
+  </a>
+
+  <a class="project-item" href="star-sitter.html">
+    <div class="project-bg pb-2"></div>
+    <div class="project-arrow">↗</div>
+    <div class="project-meta">
+      <div class="project-status"><div class="sdot"></div>2023 to 2025</div>
+      <div class="project-title">star sitter program</div>
+      <div class="project-footer">
+        <div class="project-desc">A provider-level status program rewarding reliability and on-platform care — driving 4.8% more revenue per new customer, extrapolating to ~$2.5M incremental ARR.</div>
+        <div class="project-source">Rover · sitter experience</div>
+      </div>
+    </div>
+  </a>
+
+  <a class="project-item" href="https://www.notion.so/311332846c00802a9a24fcc798966539" target="_blank">
+    <div class="project-bg pb-3"></div>
+    <div class="project-arrow">↗</div>
+    <div class="project-meta">
+      <div class="project-status"><div class="sdot"></div>2024 to 2025</div>
+      <div class="project-title">service areas using travel distance</div>
+      <div class="project-footer">
+        <div class="project-desc">Replacing circular radii with road-based polygons so sitters define areas by how they actually travel — improving search-to-book by up to +2.8% and match quality by 7%.</div>
+        <div class="project-source">Rover · marketplace dynamics</div>
+      </div>
+    </div>
+  </a>
+
+  <a class="project-item" href="https://www.notion.so/0f372d842c754fcaa1f67b93f3e0ab1f" target="_blank">
+    <div class="project-bg pb-4"></div>
+    <div class="project-arrow">↗</div>
+    <div class="project-meta">
+      <div class="project-status"><div class="sdot"></div>2022</div>
+      <div class="project-title">reducing platform diversion</div>
+      <div class="project-footer">
+        <div class="project-desc">Phone number blocking and Community Guidelines to keep relationships on-platform — protecting an estimated $5M+ in annual revenue without hurting booking rates.</div>
+        <div class="project-source">Rover · trust & safety</div>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<div class="divider" style="margin-top: 0;"></div>
+
+<!-- EXPERIENCE -->
+<section class="section" id="experience">
+  <p class="section-label">Experience</p>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="exp-company">Rover · Marketplace dynamics and sitter experience</div>
+        <div class="exp-focus">Designing sitter-facing tools and systems for search, loyalty, and pricing.</div>
+        <div class="exp-role-inline">
+          <span class="exp-role-title">Product Designer <span>→ Senior Product Designer</span></span>
+          <span class="exp-role-date">Jun 2022 — today · Barcelona</span>
+        </div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <ul class="exp-bullets">
+          <li>Defining the long-term roadmap and scope for the sitter-side experience.</li>
+          <li>Identifying and solving core pain points in the sitter lifecycle to improve platform health.</li>
+          <li>Partnering with cross-functional leads to launch alternative monetisation models designed to keep transactions on-platform.</li>
+          <li>Designed the incentive framework that directed 10% more requests to top-tier sitters, resulting in <strong>~$2.5M incremental ARR</strong>.</li>
+          <li>Led design for phone number blocking and community guideline features, contributing <strong>$3M and $2M respectively</strong> in new customer revenue.</li>
+          <li>Collaborated on search experience improvements and initial AI discovery features.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="exp-company">Glovo · Warehouse management system</div>
+        <div class="exp-role-inline">
+          <span class="exp-role-title">Product Designer</span>
+          <span class="exp-role-date">Nov 2021 — May 2022 · Barcelona</span>
+        </div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <ul class="exp-bullets">
+          <li>Focused on reducing operational friction in Micro-Fulfillment Centers to improve order accuracy and speed.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="exp-company">Stuart · Last mile delivery logistics</div>
+        <div class="exp-role-inline">
+          <span class="exp-role-title">Product Designer <span>→ Senior Product Designer</span></span>
+          <span class="exp-role-date">Oct 2019 — Nov 2021 · Barcelona</span>
+        </div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <ul class="exp-bullets">
+          <li>Evangelised the <strong>Mission-Minded development</strong> framework across the org.</li>
+          <li>Led the design for client-facing tools focused on delivery slot management and package tracking.</li>
+          <li>Collaborated on high-complexity projects involving API-first architectures and urban logistics.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="exp-company">GuestCentric · Hotel management system</div>
+        <div class="exp-role-inline">
+          <span class="exp-role-title">Product Designer</span>
+          <span class="exp-role-date">Jun 2018 — Sep 2019 · Lisbon</span>
+        </div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <ul class="exp-bullets">
+          <li>Built a scalable design system for GuestCentric's suite of hospitality tools and led front-end development for new products, bridging the gap between marketing goals and technical delivery.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section class="section" id="education">
+  <p class="section-label">Education</p>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="edu-degree">Post Graduation, Digital Experience Design</div>
+        <div class="edu-school">Faculdade de Belas Artes da Universidade de Lisboa · Lisbon · 2017–2018</div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <p class="edu-desc">Study, speculate and propose new relationships and understandings in the context of product design and digital services, where the research focused on the user, the interface design and interaction, strategic management, digital marketing and entrepreneurship.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="acc-item">
+    <button class="acc-trigger" aria-expanded="false">
+      <div class="acc-trigger-left">
+        <div class="edu-degree">Bachelor's Degree, Design and Multimedia</div>
+        <div class="edu-school">Universidade de Coimbra · Coimbra · 2013–2017</div>
+      </div>
+      <div class="acc-icon"><span></span><span></span></div>
+    </button>
+    <div class="acc-body">
+      <div class="acc-body-inner">
+        <p class="edu-desc">Skills in the area of Graphic Design, Multimedia and Computer Engineering. Video editing, motion graphics production, user experience design, web design and development, and multimedia object programming.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="big-heading">
+    <div class="heading-row">
+      <span>let's talk</span>
+      <div class="rule"></div>
+    </div>
+    <div>or have a beer</div>
+  </div>
+  <div class="contact-links">
+    <a href="/cdn-cgi/l/email-protection#244641564a4556404b0a545640644349454d480a474b49" class="contact-link">
+      <span><span class="__cf_email__" data-cfemail="e78582958986958388c9979583a7808a868e8bc984888a">[email&#160;protected]</span></span>
+      <span class="contact-link-type">Email</span>
+    </a>
+    <a href="https://linkedin.com/in/bernardoprd" target="_blank" class="contact-link">
+      <span>linkedin.com/in/bernardoprd</span>
+      <span class="contact-link-type">LinkedIn</span>
+    </a>
+    <a href="bernardoprd-cv-2026.pdf" target="_blank" class="contact-link">
+      <span>bernardoprd-cv-2026.pdf</span>
+      <span class="contact-link-type">CV download</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-copy">© 2025 Bernardo Prudêncio. All rights reserved.</span>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // accordion
+  document.querySelectorAll('.acc-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const body = trigger.nextElementSibling;
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      trigger.setAttribute('aria-expanded', !isOpen);
+      body.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // cursor
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  // active nav
+  const navLinks = document.querySelectorAll('nav a');
+  const targets = ['hero','about','work-heading','experience','contact'].map(id => document.getElementById(id)).filter(Boolean);
+  window.addEventListener('scroll', () => {
+    let current = '';
+    targets.forEach(s => { if (window.scrollY >= s.offsetTop - 260) current = s.id; });
+    navLinks.forEach(a => {
+      const href = a.getAttribute('href').slice(1);
+      a.classList.toggle('active', href === current);
+    });
+  });
+
+  // scroll reveals
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.06 });
+
+  document.querySelectorAll('.exp-block, .exp-role, .e
