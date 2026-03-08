@@ -1,1 +1,59 @@
+# bernardoprd — portfolio
 
+Personal portfolio website for Bernardo Prudêncio, Senior Product Designer based in Barcelona.
+
+## Stack
+
+Pure HTML/CSS/JS — no build step, no framework, no dependencies except Google Fonts. Deployable anywhere.
+
+## Files
+
+```
+index.html          → Main portfolio (hero, about, selected work, experience, education, contact)
+star-sitter.html    → Star Sitter program case study
+README.md           → This file
+```
+
+## Local development
+
+Just open `index.html` in a browser. No server needed.
+
+```bash
+open index.html
+```
+
+## Deployment
+
+Hosted via **GitHub Pages** or **Vercel**. Any push to `main` triggers a deploy.
+
+### GitHub Pages setup
+1. Repo Settings → Pages
+2. Source: `main` branch, `/ (root)`
+3. Save — live at `https://USERNAME.github.io/REPO`
+
+### Custom domain
+Add a `CNAME` file with your domain (e.g. `bernardoprd.com`), then point your DNS to GitHub's servers.
+
+## Adding new case studies
+
+Each case study is a standalone HTML file. Copy `star-sitter.html` as a template — it shares the same CSS variables, fonts, header, and cursor as `index.html`.
+
+Update the project card link in `index.html`:
+```html
+<a class="project-item" href="your-case-study.html">
+```
+
+## Design system
+
+| Token | Value | Usage |
+|---|---|---|
+| `--bg` | `#0c0c0b` | Page background |
+| `--text` | `#f0ede6` | Primary text |
+| `--mid` | `#888880` | Secondary text |
+| `--muted` | `#4a4a46` | Tertiary / dates |
+| `--rule` | `rgba(240,237,230,0.12)` | Dividers |
+| Font | Syne + Syne Mono | Google Fonts |
+
+## Content source
+
+Portfolio content is maintained in Notion at `bernardoprd.notion.site` and synced manually into HTML.
